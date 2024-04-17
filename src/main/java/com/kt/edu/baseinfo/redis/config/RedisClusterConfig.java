@@ -1,5 +1,11 @@
 package com.kt.edu.baseinfo.redis.config;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.lettuce.core.ReadFrom;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +18,11 @@ import org.springframework.data.redis.connection.lettuce.LettuceClientConfigurat
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -56,13 +65,34 @@ public class RedisClusterConfig {
         return new LettuceConnectionFactory(redisConfig);
     }
 
-
+    /*
     @Bean(name = "redisObjectTemplate")
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
+    }
+    */
+
+    @Bean(name = "redisObjectTemplate")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(BigDecimal.class, new JsonDeserializer<BigDecimal>() {
+            @Override
+            public BigDecimal deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+                return p.getDecimalValue(); // or custom handling
+            }
+        });
+        objectMapper.registerModule(module);
+
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+        return template;
     }
 
     @Bean(name = "reactiveRedisConnectionFactory")
