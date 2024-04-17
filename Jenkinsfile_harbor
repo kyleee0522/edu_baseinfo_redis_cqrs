@@ -4,7 +4,7 @@ def label = "agent-${UUID.randomUUID().toString()}"
 // 사용할 이미지 이름과 기타 변수 설정
 def gitBranch = 'master'
 def docker_registry = "myharbor.apps.211-34-231-93.nip.io"
-def imageName = "${docker_registry}/edu/edu_baseinfo_redis"
+def imageName = "${docker_registry}/edu/edu_baseinfo"
 def P_NAMESPACE = "devops-slave"
 def P_SLAVE_PVC = "jenkins-slave-pvc"
 def P_EMAIL = "kyleee0522@gmail.com"
