@@ -1,0 +1,84 @@
+server:
+  tomcat:
+    url-encoding: UTF-8
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: baseinfo
+  profiles:
+    active: dev
+  banner:
+    location: "classpath:banner.txt"
+# cache 사용을 위해 cache name 설정
+  cache:
+    cache-names: employee
+#  security:
+#    user:
+#      name: admin
+#      password: admin
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8080
+
+# logging
+logging:
+  config: classpath:log4j2.xml
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #cache:
+  #  type: redis
+  data:
+    redis:
+      host: 211.252.87.34 # 127.0.0.1
+      port: 30020 # 6379
+      commandtime_duration: 10
+      #repositories:
+      #  enabled: false
+  #data:
+  #  redis:
+  #    pool:
+  #      max-active: 8
+  #      max-idle: 8
+  #      min-idle: 2
+  #    host: 211.252.87.34
+  #    port: 30020
+      #host: "${REDIS_SERVER}"
+      #port: "${REDIS_PORT}"
+      #username: "ENC(${REDIS_USERNAME})"
+      #password: "ENC(${REDIS_PASSWORD})"
+      timeout: 1000
+
+#jasypt encryptor
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
+jwt:
+  secret: CloudNativeKtEduSecretKey20240228CloudNativeKtEduSecretKey20240228CloudNativeKtEduSecretKey20240228
+
+# app
+app-info:
+  app-name: "edu-spring-data-jdbc"
+  title: "Cloud Native Edu API"
+  build:
+    version: '@project.version@'
+    timestamp: '@app.build.timestamp@'
+  user-id: "jake lee"
+  org-id: "KT"
+  desc: "EDU 관련 설명입니다."
+  doc-url: "https://github.com/kt-cloudnative/education/"
+  license: "Apache License"
+  license_url: "https://github.com/kt-cloudnative/education/"
+  version: "@app.build.timestamp@"
+  doc-desc: "교육용"
+

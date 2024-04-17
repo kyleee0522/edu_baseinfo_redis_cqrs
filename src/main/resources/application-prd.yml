@@ -1,0 +1,75 @@
+##############
+### prd
+##############
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    connection-timeout: 5s
+    max-connections: 1000
+    accept-count: 20
+    threads:
+      max: 200
+spring:
+  datasource:
+    #driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://mariadb-mariadb-galera.mariadb-system.svc.cluster.local:3306/baseinfo # jdbc:mariadb://db:3306/edu
+    username: baseinfo
+    #password: caravan
+    #password: ENC(hk5/B+52K9XaD+BqzpFaHQ==)
+    #password: New1234!
+    password: ENC(cX5eDeWCal1Zen+LxWhQFXkqh44xdeDG)
+  sql:
+    init:
+      platform: mariadb
+#    hikari:
+#      pool-name: hikari-cp
+#      maximum-pool-size: 30
+#      minimum-idle: 2
+#      data-source-properties:
+#        cachePrepStmts: true
+#        prepStmtCacheSize: 250
+#        prepStmtCacheSqlLimit: 2048
+#        useServerPrepStmts: true
+
+  data:
+    redis:
+      host: redis-cluster.redis-system.svc.cluster.local # 127.0.0.1
+      #host: localhost
+      port: 6379
+      username:
+      password: New1234!
+      #username: "ENC(${REDIS_USERNAME})"
+      #password: "ENC(${REDIS_PASSWORD})"
+      commandtime_duration: 10
+
+# spring boot - actuator expose
+management:
+  endpoints:
+    health:
+      show-details: always
+      enabled: true
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include: health,prometheus,metrics,caches,beans
+  endpoint:
+    health:
+      probes:
+        enabled: true
+        
+springdoc:
+  show-actuator: true  # actuator swagger 노출
+  swagger-ui:
+    groups-order: DESC
+    #operations-sorter: alpha
+    #tags-sorter: alpha
+    disable-swagger-default-url: true
+    #doc-expansion: none
+
+logging:
+  level:
+    com.kt.edu: info

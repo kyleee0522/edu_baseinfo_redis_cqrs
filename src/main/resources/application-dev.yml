@@ -1,0 +1,82 @@
+##############
+### dev
+##############
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    connection-timeout: 5s
+    max-connections: 1000
+    accept-count: 20
+    threads:
+      max: 200
+spring:
+  h2:
+    # h2 DB
+    console:
+      enabled: true
+      path: /h2-console
+  # Database Platform
+  sql:
+    init:
+      platform: h2
+      mode: embedded
+  datasource:
+    #driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/baseinfo
+    username: baseinfo
+      #password: caravan
+      #password: ENC(hk5/B+52K9XaD+BqzpFaHQ==)
+      #password: New1234!
+    password: ENC(cX5eDeWCal1Zen+LxWhQFXkqh44xdeDG)
+    # h2 DB
+    generate-unique-name: false
+    hikari:
+      pool-name: hikari-cp
+      maximum-pool-size: 30
+      minimum-idle: 2
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  data:
+    redis:
+      host: 211.252.87.34 # 127.0.0.1
+      port: 30020 # 6379
+      username:
+      password:
+      commandtime_duration: 10
+
+# spring boot - actuator expose
+management:
+  endpoints:
+    health:
+      show-details: always
+      enabled: true
+    loggers:
+      enabled: true  
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include: health,prometheus,loggers,metrics,caches,beans
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  show-actuator: true  # actuator swagger 노출
+  swagger-ui:
+    groups-order: DESC
+    #operations-sorter: alpha
+    #tags-sorter: alpha
+    disable-swagger-default-url: true
+    #doc-expansion: none
+
+logging:
+  level:
+    com.kt.edu: trace
